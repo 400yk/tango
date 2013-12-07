@@ -3,5 +3,5 @@ from rango import views
 
 urlpatterns = patterns('',
         url(r'^$', views.index, name = 'index'),
-        url(r'^page', views.page, name = 'page'))
+        url(r'^about', views.about, name = 'about'))
 
