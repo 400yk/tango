@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About this website</title>
+</head>
+<body>
+    <h1>What is this?</h1>
+    <img src="{% static 'about_pic.jpg'%}"/>
+    <p> This is a website powered by Django </p>
+    <a href="{% url 'rango.views.index'%}">Go back to main page.</a>
+</body>
+</html>

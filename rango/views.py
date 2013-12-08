@@ -15,5 +15,8 @@ def index(request):
     return render_to_response('rango/index.html', context_dict, context)
 
 def about(request):
-    return HttpResponse("Range says: here is the about page. <a href='/rango/'>Main page</a>")
+    context = RequestContext(request)
+    about_message = {'self_intro': "Hi there it's fun programming in Django!"}
+    return render_to_response('rango/about.html', about_message, context)
+
 
