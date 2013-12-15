@@ -181,5 +181,5 @@ def restricted(request):
 def user_logout(request):
     logout(request)
     # no need to fetch the request since we don't need it
-    return HttpResponse('/rango/')
+    return HttpResponseRedirect('/rango/')
 

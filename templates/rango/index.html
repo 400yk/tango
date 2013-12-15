@@ -15,6 +15,7 @@
         <h1>Rango says..hello {{ user.username }}!</h1>
         <a href="/rango/restricted/">Membership</a>
         <a href="/rango/logout/">Logout</a>
+        <a href="/rango/add_category/">Add a new category</a>
         {% else %}
         <h1>Rango says...hello world</h1>
         <a href="/rango/register/">Register here!</a>
@@ -45,7 +46,6 @@
         <a href="/rango/about/">About</a><br />
         <img src="{% static 'rango_pic.jpg' %}" alt="Picture of Rango"/>
         <br>
-        <a href="/rango/add_category/">Add a new category</a>
     </body>
 
 </html>
