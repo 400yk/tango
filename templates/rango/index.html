@@ -13,12 +13,15 @@
     <body>
         {% if user.is_authenticated %}
         <h1>Rango says..hello {{ user.username }}!</h1>
+        <a href="/rango/restricted/">Membership</a>
+        <a href="/rango/logout/">Logout</a>
         {% else %}
         <h1>Rango says...hello world</h1>
+        <a href="/rango/register/">Register here!</a>
+        <a href="/rango/login/">Login</a>
         {% endif %}
 
         <br/>
-        <a href="/rango/login">Login</a>
         {% if categories %}
         <ul>
             {% for cate in categories %}
@@ -43,7 +46,6 @@
         <img src="{% static 'rango_pic.jpg' %}" alt="Picture of Rango"/>
         <br>
         <a href="/rango/add_category/">Add a new category</a>
-        <a href="/rango/register/">Register here!</a>
     </body>
 
 </html>

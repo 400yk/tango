@@ -1,10 +1,11 @@
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from django.contrib.auth.decorators import login_required
 
 def encoding(url):
     return url.replace('_',' ')
@@ -171,4 +172,14 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied.")
     else:
         return render_to_response('rango/login.html', {}, context)
+
+@login_required
+def restricted(request):
+    return HttpResponse("Since you are logged in, you can see this response.")
+
+@login_required
+def user_logout(request):
+    logout(request)
+    # no need to fetch the request since we don't need it
+    return HttpResponse('/rango/')
 
