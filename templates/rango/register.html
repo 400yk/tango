@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rango</title>
+</head>
+<body>
+    <h1>Register with Rango</h1>
+    
+    {% if registered %}
+    Rango says:<strong>Thank you for registering!</strong>
+    <a href="/rango/">Return to the homepage.</a><br />
+    {% else %}
+    Rango says:<strong>Register here!</strong>
+    <p>Click <a href="/rango/">here</a> to go to the homepage</p>
+    <form id="user_form" method="post" action="/rango/register/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- The as_p method wrap each element in the <p>, making sure that each element
+        appear in a new line -->
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <input type="submit" name="submt" value="Resiger"/>
+    </form>
+    {% endif %}    
+</body>
+</html>

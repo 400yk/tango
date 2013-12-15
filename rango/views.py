@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from rango.models import Category, Page
-from rango.forms import CategoryForm, PageForm
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 def encoding(url):
     return url.replace('_',' ')
@@ -102,3 +102,47 @@ def add_page(request, category_name_url):
         'form' : form 
         }, context)
 
+
+def register(request):
+    context = RequestContext(request)
+
+    registered = False
+
+    if request.method == "POST":
+        user_form = UserForm(data = request.POST)
+        profile_form = UserProfileForm(data = request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+
+            # We hash the password with set_password method.
+            # After hashing we can update the user object
+            user.set_password(user.password)
+        
+            user.save()
+            
+            # This is where we populate profile_form with user_form info
+            profile = profile_form.save(commit = False)
+            profile.user = user
+
+            # If user provided a picture, we need to get it from the input and
+            # put it in the UserProfile model
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+
+            registered = True
+
+        else:
+            print user_form.errors, profile_form.errors
+
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render_to_response('rango/register.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'registered': registered
+        }, context)
