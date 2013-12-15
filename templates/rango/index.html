@@ -13,16 +13,29 @@
     <body>
         <h1>Rango says...hello world</h1>
         {% if categories %}
-            <ul>
-                {% for cate in categories %}
-                <li><a href="/rango/category/{{ cate.url }}">{{ cate.name }}</a></li>
-                {% endfor %}
-            </ul>
+        <ul>
+            {% for cate in categories %}
+            <li><a href="/rango/category/{{ cate.url }}">{{ cate.name }}</a></li>
+            {% endfor %}
+        </ul>
         {% else %}
         <strong>There are no categories present.</strong>
         {% endif %}
+
+        {% if top_pages %}
+        <h2> Top viewed pages </h2>
+        <ul>
+            {% for page in top_pages %}
+            <li><a href = "{{ page.url }}">{{ page.title }}</a><p>Number of views: {{ page.views }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
         <a href="/rango/about/">About</a><br />
         <img src="{% static 'rango_pic.jpg' %}" alt="Picture of Rango"/>
+        <br>
+        <a href="/rango/add_category/">Add a new category</a>
     </body>
 
 </html>

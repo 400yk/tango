@@ -16,6 +16,7 @@
         {% else %}
         <strong>No pages currently in category.</strong>
         {% endif %}
+        <a href="{% url 'add_page' category_name_url %}">Add page here</a>
         {% else %}
         The specified category {{ category_name }} does not exist!
         {% endif %}
