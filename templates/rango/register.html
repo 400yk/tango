@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Rango</title>
-</head>
-<body>
+{% extends 'rango/base.html' %}
+{% block body_block %}
     <h1>Register with Rango</h1>
     
     {% if registered %}
@@ -22,5 +17,4 @@
         <input type="submit" name="submt" value="Resiger"/>
     </form>
     {% endif %}    
-</body>
-</html>
+{% endblock %}

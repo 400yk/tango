@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Rango</title>
-</head>
-<body>
+{% extends 'rango/base.html' %}
+{% block body_block %}
     <h1>Login to Rango</h1>
     <form id="login_form" method="post" action="/rango/login/">
         {% csrf_token %}
@@ -14,5 +9,4 @@
         <br />
         <input type="submit" value="Login"/>
     </form> 
-</body>
-</html>
+{% endblock %}

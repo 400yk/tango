@@ -1,29 +1,9 @@
-<!DOCTYPE html>
-
+{% extends 'rango/base.html' %}
 {% load static %}
-
-<html>
-
-    <head>
-        <title>Rango</title>
-        <link rel="stylesheet" href="{% static "css/base.css" %}" /> <!-- CSS -->
-        <script src="{% static "js/jquery.js" %}"></script> <!-- JavaScript -->        
-    </head>
-
-    <body>
-        {% if user.is_authenticated %}
-        <h1>Rango says..hello {{ user.username }}!</h1>
-        <a href="/rango/restricted/">Membership</a>
-        <a href="/rango/logout/">Logout</a>
-        <a href="/rango/add_category/">Add a new category</a>
-        {% else %}
-        <h1>Rango says...hello world</h1>
-        <a href="/rango/register/">Register here!</a>
-        <a href="/rango/login/">Login</a>
-        {% endif %}
-
+{% block body_block %}
         <br/>
         {% if categories %}
+        <h2>Top categories</h2>
         <ul>
             {% for cate in categories %}
             <li><a href="/rango/category/{{ cate.url }}">{{ cate.name }}</a></li>
@@ -46,6 +26,4 @@
         <a href="/rango/about/">About</a><br />
         <img src="{% static 'rango_pic.jpg' %}" alt="Picture of Rango"/>
         <br>
-    </body>
-
-</html>
+{% endblock %}

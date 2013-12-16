@@ -1,16 +1,10 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 
 {% load static %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>About this website</title>
-</head>
-<body>
+{% block title %}About this website{% endblock %}
+{% block body_block %}
     <h1>What is this?</h1>
     <img src="{% static 'about_pic.jpg'%}"/>
     <p> This is a website powered by Django </p>
-    <a href="{% url 'rango.views.index'%}">Go back to main page.</a>
-</body>
-</html>
+{% endblock %}
