@@ -1,20 +1,37 @@
 {% extends 'rango/base.html' %}
 {% block body_block %}
+<div class="hero-unit">
     <h1>Register with Rango</h1>
-    
-    {% if registered %}
-    Rango says:<strong>Thank you for registering!</strong>
-    <a href="/rango/">Return to the homepage.</a><br />
-    {% else %}
-    Rango says:<strong>Register here!</strong>
-    <p>Click <a href="/rango/">here</a> to go to the homepage</p>
-    <form id="user_form" method="post" action="/rango/register/" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!-- The as_p method wrap each element in the <p>, making sure that each element
-        appear in a new line -->
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
-        <input type="submit" name="submt" value="Resiger"/>
-    </form>
-    {% endif %}    
+    <br />
+    <div class="container">
+        {% if registered %}
+        Rango says:<strong>Thank you for registering!</strong>
+        <a href="/rango/">Return to the homepage.</a><br />
+        {% else %}
+        Rango says:<strong>Register here!</strong>
+        <p>Click <a href="/rango/">here</a> to go to the homepage</p>
+        <form class="form-signin span8" id="user_form" method="post" action="/rango/register/" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2 class="form-signin-heading">Sign up here</h2>
+
+            <!-- The as_p method wrap each element in the <p>, making sure that each element
+            appear in a new line -->
+            <!-- Display each form here -->
+
+            {% for field in user_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}<br />
+            {{ field }}<br />
+            {% endfor %}
+
+            {% for field in profile_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}<br />
+            {{ field }}<br />
+            {% endfor %}
+            <input class="btn btn-primary" type="submit" name="submt" value="Resiger"/>
+        </form>
+        {% endif %}    
+    </div>
+</div>
 {% endblock %}
