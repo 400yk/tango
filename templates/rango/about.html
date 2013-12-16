@@ -4,7 +4,11 @@
 
 {% block title %}About this website{% endblock %}
 {% block body_block %}
+<div class="hero-unit">
     <h1>What is this?</h1>
     <img src="{% static 'about_pic.jpg'%}"/>
     <p> This is a website powered by Django </p>
+    <br />
+    <p>Views count: {{ visits }}</p>
+</div>
 {% endblock %}

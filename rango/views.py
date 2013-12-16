@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from datetime import datetime
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
@@ -14,16 +14,18 @@ def decoding(url):
     return url.replace(' ','_')
 
 def index(request):
+    # Run a test for the cookie as follows:
+    # request.session.set_test_cookie()
+
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.            
     context = RequestContext(request)
 
     # Construct a dictionary to pass to the template engine as its context.
     # Note the key boldmessage is the same as {{ boldmessage }} in the template!
-
-    category_list = Category.objects.order_by("-likes")[:5]
+    category_list = Category.objects.all()
     top_pages_list = Page.objects.order_by("-views")[:5]
-    
+
     context_dict = {'categories': category_list}
     context_dict['top_pages'] =  top_pages_list
 
@@ -31,12 +33,56 @@ def index(request):
         category.url = decoding(category.name)
 
     # Used shortcut here: render_to_response
-    return render_to_response('rango/index.html', context_dict, context)
+    response = render_to_response('rango/index.html', context_dict, context)
+
+    ''' Add cookie to the client's side
+    # Track the number of visits, default is 0
+    visits = int(request.COOKIES.get('visits', 0))
+
+    # Check if last_visit exists in the cookie
+    if request.COOKIES.has_key('last_visit'):
+        last_visit = request.COOKIES['last_visit']
+        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+
+        # if it's been more than a day since last visit
+        if (datetime.now() - last_visit_time).days > 0:
+            response.set_cookie('visits', visits + 1)
+            response.set_cookit('last_visit', datetime.now())
+
+    else:
+        # Cookie doesn't exist, create one
+        response.set_cookie('last_visit', datetime.now())
+    '''
+
+    # Add cookie to the server's side
+    if request.session.get('last_visit'):
+        last_visit_time = request.session.get('last_visit')
+        visits = request.session.get('visits', 0)
+
+        if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).days > 0:
+            request.session['visits'] = visits + 1
+            request.session['last_visit'] = str(datetime.now())
+
+    else:
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = 1
+
+    # A nice extra advantage to storing session data server-side 
+    # is that you do not need to always cast data from strings to 
+    # the desired type. Be careful though, this only seems to hold 
+    # for simple data types such as strings, integers, floats and booleans.        
+
+    return response
 
 def about(request):
     context = RequestContext(request)
-    about_message = {'self_intro': "Hi there it's fun programming in Django!"}
-    return render_to_response('rango/about.html', about_message, context)
+
+    if request.session.get('visits'):
+        count = request.session.get('visits')
+    else:
+        count = 0
+
+    return render_to_response('rango/about.html', {'visits': count}, context)
 
 def category(request, category_name_url):
     context = RequestContext(request)
@@ -106,6 +152,10 @@ def add_page(request, category_name_url):
 
 
 def register(request):
+    if request.session.test_cookie_worked():
+        print ">>> Test cookie worked"
+        request.session.delete_test_cookie()
+
     context = RequestContext(request)
 
     registered = False
