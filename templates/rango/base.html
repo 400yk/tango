@@ -34,6 +34,7 @@
                             <li><a href="/rango/add_category/">Add a New Category </a></li>
                             <li><a href="/rango/restricted/">Restricted Page</a></li>
                             {% endif %}
+                            <li><a href="/rango/search/">Search</a></li>
                             <li><a href="/rango/about/">About</a></li>
                             <li><a href="{% url 'rango.views.index'%}">Go back to main page.</a></li>
                         </ul>
@@ -46,6 +47,7 @@
             <div class="row-fluid">
                 <div class="span3">
                     <div class="well sidebar-nav">
+                        {% include 'rango/category_list.html' %}
                     </div>
                 </div>
                 <div class="span9">

@@ -8,19 +8,6 @@
 
 <div class="row-fluid">
     <div class="span6">
-        {% if categories %}
-        <h2>Top categories</h2>
-        <ul>
-            {% for cate in categories %}
-            <li><a href="/rango/category/{{ cate.url }}">{{ cate.name }}</a></li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <strong>There are no categories present.</strong>
-        {% endif %}
-    </div>
-
-    <div class="span6">
         {% if top_pages %}
         <h2> Top viewed pages </h2>
         <ul>

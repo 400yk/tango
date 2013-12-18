@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from rango.bing_search import run_query
 from django.contrib.auth.decorators import login_required
 
 def encoding(url):
@@ -12,6 +13,13 @@ def encoding(url):
 
 def decoding(url):
     return url.replace(' ','_')
+
+def get_categories():
+    category_list = Category.objects.all()
+    for category in category_list:
+        category.url = decoding(category.name)
+
+    return category_list
 
 def index(request):
     # Run a test for the cookie as follows:
@@ -23,14 +31,10 @@ def index(request):
 
     # Construct a dictionary to pass to the template engine as its context.
     # Note the key boldmessage is the same as {{ boldmessage }} in the template!
-    category_list = Category.objects.all()
     top_pages_list = Page.objects.order_by("-views")[:5]
-
-    context_dict = {'categories': category_list}
-    context_dict['top_pages'] =  top_pages_list
-
-    for category in category_list:
-        category.url = decoding(category.name)
+    context_dict = {}
+    context_dict['top_pages'] = top_pages_list
+    context_dict['categories'] = get_categories()
 
     # Used shortcut here: render_to_response
     response = render_to_response('rango/index.html', context_dict, context)
@@ -82,7 +86,7 @@ def about(request):
     else:
         count = 0
 
-    return render_to_response('rango/about.html', {'visits': count}, context)
+    return render_to_response('rango/about.html', {'visits': count, 'categories': get_categories()}, context)
 
 def category(request, category_name_url):
     context = RequestContext(request)
@@ -97,6 +101,7 @@ def category(request, category_name_url):
         context_dict['pages'] = pages
         context_dict['category_name_url'] = category_name_url
         context_dict['category'] = category
+        context_dict['categories'] = get_categories()
 
     except Category.DoesNotExist:
         pass
@@ -119,7 +124,7 @@ def add_category(request):
     else:
         form = CategoryForm()
 
-    return render_to_response("rango/add_category.html", {'form': form}, context)
+    return render_to_response("rango/add_category.html", {'form': form, 'categories': get_categories()}, context)
 
 def add_page(request, category_name_url):
     context = RequestContext(request)
@@ -147,7 +152,8 @@ def add_page(request, category_name_url):
     return render_to_response('rango/add_page.html', {
         'category_name_url' : category_name_url,
         'category_name' : category_name,
-        'form' : form 
+        'form' : form,
+        'categories': get_categories()
         }, context)
 
 
@@ -196,7 +202,8 @@ def register(request):
     return render_to_response('rango/register.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'registered': registered
+        'registered': registered,
+        'categories': get_categories()
         }, context)
 
 def user_login(request):
@@ -221,7 +228,7 @@ def user_login(request):
             print "Invalid login details: {0}, {1}".format(username, password)
             return HttpResponse("Invalid login details supplied.")
     else:
-        return render_to_response('rango/login.html', {}, context)
+        return render_to_response('rango/login.html', {'categories': get_categories()}, context)
 
 @login_required
 def restricted(request):
@@ -233,3 +240,14 @@ def user_logout(request):
     # no need to fetch the request since we don't need it
     return HttpResponseRedirect('/rango/')
 
+def search(request):
+    context = RequestContext(request)
+    result_list = []
+
+    if request.method == "POST":
+        query = request.POST['query'].strip()
+
+        if query:
+            result_list = run_query(query)
+
+    return render_to_response('rango/search.html', {'result_list': result_list, 'categories': get_categories()}, context)
