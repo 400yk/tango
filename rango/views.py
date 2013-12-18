@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from rango.bing_search import run_query
 from django.contrib.auth.decorators import login_required
@@ -106,6 +106,15 @@ def category(request, category_name_url):
     except Category.DoesNotExist:
         pass
 
+    result_list = []
+
+    if request.method == "POST":
+        query = request.POST['query'].strip()
+
+        if query:
+            result_list = run_query(query)
+
+    context_dict['result_list'] = result_list
     return render_to_response('rango/category.html', context_dict, context)
 
 def add_category(request):
@@ -251,3 +260,12 @@ def search(request):
             result_list = run_query(query)
 
     return render_to_response('rango/search.html', {'result_list': result_list, 'categories': get_categories()}, context)
+
+@login_required
+def profile(request):
+    context = RequestContext(request)
+    user = request.user
+    profile = UserProfile.objects.get(user = user)
+    
+    return render_to_response('rango/profile.html', {'profile': profile}, context)
+    
