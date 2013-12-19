@@ -96,7 +96,7 @@ def category(request, category_name_url):
 
     try:
         category = Category.objects.get(name = category_name)
-        pages = Page.objects.filter(category = category)
+        pages = Page.objects.filter(category = category).order_by('-views')
 
         context_dict['pages'] = pages
         context_dict['category_name_url'] = category_name_url
@@ -113,8 +113,8 @@ def category(request, category_name_url):
 
         if query:
             result_list = run_query(query)
+            context_dict['result_list'] = result_list
 
-    context_dict['result_list'] = result_list
     return render_to_response('rango/category.html', context_dict, context)
 
 def add_category(request):

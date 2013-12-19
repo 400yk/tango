@@ -16,14 +16,15 @@
     <br />
     <hr />
     <br />
-    
-    <h1>Search with Rango</h1>
-    <br/>
-   <form class="form-signin span8" method="post" id="user_form" action="/rango/category/{{ category_name_url }}/">
+
+    <div class="container-fluid">
+        <p>Search for a page</p>
+        <form class="form-signin span8" method="post" id="user_form" action="/rango/category/{{ category_name_url }}/">
             {% csrf_token %}
-            <input type="text" size="50" name="query" id="query" value=""/>
+            <input type="text" class="input-long search-query" size="50" name="query" id="query" value="{{ categoery_name }}"/>
             <input class="btn btn-primary" type="submit" name="submit" value="Search"/>  
         </form>
+    </div>
 
         {% if result_list %}
         <div style="clear: both;">
