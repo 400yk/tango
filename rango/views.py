@@ -269,3 +269,18 @@ def profile(request):
     
     return render_to_response('rango/profile.html', {'profile': profile}, context)
     
+def track_url(request):
+    context = RequestContext(request)
+
+    if request.method == "GET":
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+
+            page = Page.objects.get(pk = page_id)
+            page.views += 1
+            page.save()
+
+            return HttpResponseRedirect(page.url)
+
+    return HttpResponseRedirect('/rango/')
+

@@ -12,7 +12,7 @@
         <h2> Top viewed pages </h2>
         <ul>
             {% for page in top_pages %}
-            <li><a href = "{{ page.url }}">{{ page.title }}</a><p>Number of views: {{ page.views }}</p>
+            <li><a href = "/rango/goto/?page_id={{ page.id }}">{{ page.title }}</a><p>Number of views: {{ page.views }}</p>
             </li>
             {% endfor %}
         </ul>
