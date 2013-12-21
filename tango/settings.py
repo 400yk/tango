@@ -143,7 +143,7 @@ INSTALLED_APPS = (
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
-SESSION_COOKIE_AGE = 60 # session expires after 60 seconds
+SESSION_COOKIE_AGE = 300 # session expires after 300 seconds
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

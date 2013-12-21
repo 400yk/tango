@@ -13,11 +13,13 @@
 </div>
 
     {% if pages %}
+    <div id="page_list">
     <ul>
         {% for page in pages %}
         <li><a href="/rango/goto/?page_id={{ page.id }}">{{ page.title }}</a></li>
         {% endfor %}
     </ul>
+</div>
     {% else %}
     <strong>No pages currently in category.</strong>
     {% endif %}
@@ -40,6 +42,9 @@
             <ol> 
                 {% for result in result_list %}
                 <li><strong><a href="{{ result.link }}">{{ result.title }}</a></strong>
+                {% if user.is_authenticated %}
+                <button class="btn btn-primary btn-mini add_page_btn" catid="{{ category.id }}" page_title="{{ result.title }}" page_url="{{ result.link }}">Add</button>
+                {% endif %}
                 <br />
                 <em>{{ result.summary }}</em>
                 </li>

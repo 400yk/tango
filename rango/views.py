@@ -334,3 +334,23 @@ def suggest_category(request):
 
     return render_to_response('rango/category_list.html', {'categories': cat_list}, context)
 
+@login_required
+def auto_add_page(request):
+    context = RequestContext(request)
+    cat_id = None
+    page_url = None
+    page_title = None
+    context_dict = {}
+    
+    if request.method == "GET":
+        cat_id = request.GET['catid']
+        page_url = request.GET['page_url']
+        page_title = request.GET['page_title']
+        if cat_id:
+            cat = Category.objects.get(pk = int(cat_id))
+            p = Page.objects.get_or_create(category = cat, title = page_title, url = page_url)
+            
+            pages = Page.objects.filter(category = cat).order_by('-views')
+
+            context_dict['pages'] = pages
+    return render_to_response('rango/page_list.html', context_dict, context)
