@@ -303,3 +303,34 @@ def like_category(request):
             category.save()
 
     return HttpResponse(likes)
+
+def get_category_list(max_categories = 0, starts_with = ''):
+    cat_list = []
+    if starts_with:
+        cat_list = Category.objects.filter(name__startswith = starts_with)
+    else:
+        cat_list = Category.objects.all()
+
+    if max_categories > 0:
+        if len(cat_list) > max_categories:
+            cat_list = cat_list[:max_categories]
+
+    for cat in cat_list:
+        cat.url = encoding(cat.name)
+
+    return cat_list
+
+def suggest_category(request):
+    context = RequestContext(request)
+    starts_with = ''
+    cat_list = []
+
+    if request.method == "GET":
+        starts_with = request.GET['suggestion']
+    else:
+        starts_with = request.POST['suggestion']
+
+    cat_list = get_category_list(8, starts_with)
+
+    return render_to_response('rango/category_list.html', {'categories': cat_list}, context)
+
